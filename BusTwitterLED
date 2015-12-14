@@ -1,0 +1,69 @@
+from twython import Twython, TwythonError 
+import time 
+import RPi.GPIO as GPIO
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(4, GPIO.OUT)
+GPIO.setup(17, GPIO.OUT)
+GPIO.setup(22, GPIO.OUT)
+# Requires Authentication as of Twitter API v1.1
+
+
+#Twitter application authentication
+APP_KEY = 'gcP5w8x0scLCKuTP2J0veOLa9'
+APP_SECRET = 'miPtTL5pH0E1LjhMgUxswcaY0NvZwsImyAf4C1l9rYpzwzWfsn'
+OAUTH_TOKEN = '1135924766-xRtYwm2PxJMxqtbHlbqXUx4erPtADnGkQIbcj18'
+OAUTH_TOKEN_SECRET = 'lUeGMcaB6aj5N2EU8i0tVhhmEJG9G1fiI0h4kJ6qtaFHU'
+
+twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)     
+state = True
+list =['Oakland.', 'Law School.', 'Grant@6th.', 'Grant@4th.', 'Grant@1st.', 'Beechurst@1st.', 'Beechurst@3rd.', 'Beechusrt@8th.', 'CAC.', 'Towers PRT.', 'Towers.']
+
+#Get tweet
+while True:
+    try:
+        user_timeline = twitter.get_user_timeline(screen_name='ML38bg',count=1)
+    except TwythonError as e:
+        print e
+    #Print next stop in tweet
+    for tweet in user_timeline: 
+	index = tweet['text']
+        location = index.find('Next')
+	match = index[location+11:]
+	print match 
+	
+	#Match LED to stop
+	if match == list[1] or match == list[2]:
+	    print 'green'
+            GPIO.output(4, True)
+            GPIO.output(17, False)
+            GPIO.output(22, False)
+
+	if match == list[3] or match == list[4] or match == list[5]:
+	    print 'yellow & green'
+            GPIO.output(4, True)
+            GPIO.output(17, True)
+            GPIO.output(22, False)
+	    
+	if match == list[6] or match == list[7]:
+	    print 'red'
+	          GPIO.output(4, False)
+            GPIO.output(17, False)
+            GPIO.output(22, True)
+
+	if match == list[0]:
+	    print 'yellow'
+            GPIO.output(4, False)
+            GPIO.output(17, True)
+            GPIO.output(22, False)
+	   
+	if match == list[8] or match == list[9] or match == list[10] :
+      print 'yellow & red'
+	          GPIO.output(4, False)
+            GPIO.output(17, True)
+            GPIO.output(22, True)
+
+	#Get limit for TwitterAPI = (1 tweet per 5 seconds)
+	time.sleep(5)
+
