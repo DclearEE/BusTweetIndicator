@@ -7,8 +7,9 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(4, GPIO.OUT)
 GPIO.setup(17, GPIO.OUT)
 GPIO.setup(22, GPIO.OUT)
-# Requires Authentication as of Twitter API v1.1
 
+
+#Requires Authentication as of Twitter API v1.1
 
 #Twitter application authentication
 APP_KEY = 'gcP5w8x0scLCKuTP2J0veOLa9'
@@ -48,7 +49,7 @@ while True:
 	    
 	if match == list[6] or match == list[7]:
 	    print 'red'
-	          GPIO.output(4, False)
+	    GPIO.output(4, False)
             GPIO.output(17, False)
             GPIO.output(22, True)
 
@@ -59,8 +60,8 @@ while True:
             GPIO.output(22, False)
 	   
 	if match == list[8] or match == list[9] or match == list[10] :
-      print 'yellow & red'
-	          GPIO.output(4, False)
+	    print 'yellow & red'
+	    GPIO.output(4, False)
             GPIO.output(17, True)
             GPIO.output(22, True)
 
